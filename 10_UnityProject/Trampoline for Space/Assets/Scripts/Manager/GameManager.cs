@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         {
             Vector3 spawnPosition = new Vector3();
             // アイテム生成するトランポリンの抽選
-            int tcRandomNum = UnityEngine.Random.Range((int)TrampolineColor.Red, (int)TrampolineColor.Yellow);
+            int tcRandomNum = UnityEngine.Random.Range((int)TrampolineColor.Red, (int)TrampolineColor.Yellow + 1);// 切り捨て対策でYellowは+1
             // アイテム生成する座標を取得する
             spawnPosition = GetRandomPosition(tcRandomNum);
 
@@ -76,6 +76,34 @@ public class GameManager : MonoBehaviour
         // カメラのターゲットを、プレイヤーに設定
         m_CameraCtrl.m_Target = m_PlayerCtrl.m_Instance.transform;
         m_CameraCtrl.SetUp();
+    }
+
+    //ランダムな位置を生成する関数
+    private Vector3 GetRandomPosition(int trampolineColerNum)
+    {
+        float x = 0; //x軸は引数によって変える
+        float y = 0; //y軸はランダム
+        float z = 0; //z軸は0固定
+
+        //x軸だけランダムに生成する
+        switch (trampolineColerNum)
+        {
+            case (int)TrampolineColor.Red:
+                x = 0;
+                break;
+            case (int)TrampolineColor.Blue:
+                x = 2.5f;
+                break;
+            case (int)TrampolineColor.Yellow:
+                x = -2.5f;
+                break;
+        }
+
+        // y軸（高さ）はランダム
+        y = UnityEngine.Random.Range(m_ItemYMinPosition, m_ItemYMaxPosition);
+
+        //Vector3型のPositionを返す
+        return new Vector3(x, y, z);
     }
 
     void Start()
@@ -300,7 +328,7 @@ public class GameManager : MonoBehaviour
         form.AddField("gameScore", score);
 
         // WebRequest.POST通信（※androidで動かしたいならばlocalhostではなく、IPアドレスを入れること）
-        UnityWebRequest webRequest = UnityWebRequest.Post("http://localhost/tfs/UserScore/setRanking", form);
+        UnityWebRequest webRequest = UnityWebRequest.Post("http://192.168.11.13/tfs/UserScore/setRanking", form);
 
         //タイムアウトの指定
         webRequest.timeout = 5;
@@ -353,7 +381,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator GetRanking(Action<string> cbkSuccess = null, Action cbkFailed = null)
     {
         // WebRequest.POST通信（※androidで動かしたいならばlocalhostではなく、IPアドレスを入れること）
-        UnityWebRequest webRequest = UnityWebRequest.Get("http://localhost/tfs/UserScore/getRanking");
+        UnityWebRequest webRequest = UnityWebRequest.Get("http://192.168.11.13/tfs/UserScore/getRanking");
 
         //タイムアウトの指定
         webRequest.timeout = 5;
@@ -400,31 +428,5 @@ public class GameManager : MonoBehaviour
         m_TitleButton.SetActive(true);
     }
 
-    //ランダムな位置を生成する関数
-    private Vector3 GetRandomPosition(int trampolineColerNum)
-    {
-        float x = 0; //x軸は引数によって変える
-        float y = 0; //y軸はランダム
-        float z = 0; //z軸は0固定
 
-        //x軸だけランダムに生成する
-        switch (trampolineColerNum)
-        {
-            case (int)TrampolineColor.Red:
-                x = 0;
-                break;
-            case (int)TrampolineColor.Blue:
-                x = 2.5f;
-                break;
-            case (int)TrampolineColor.Yellow:
-                x = -2.5f;
-                break;
-        }
-
-        // y軸（高さ）はランダム
-        y = UnityEngine.Random.Range(m_ItemYMinPosition, m_ItemYMaxPosition);
-
-        //Vector3型のPositionを返す
-        return new Vector3(x, y, z);
-    }
 }
