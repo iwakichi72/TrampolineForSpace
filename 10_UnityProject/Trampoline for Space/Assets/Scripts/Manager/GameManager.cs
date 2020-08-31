@@ -78,34 +78,6 @@ public class GameManager : MonoBehaviour
         m_CameraCtrl.SetUp();
     }
 
-    //ランダムな位置を生成する関数
-    private Vector3 GetRandomPosition(int trampolineColerNum)
-    {
-        float x = 0; //x軸は引数によって変える
-        float y = 0; //y軸はランダム
-        float z = 0; //z軸は0固定
-
-        //x軸だけランダムに生成する
-        switch (trampolineColerNum)
-        {
-            case (int)TrampolineColor.Red:
-                x = 0;
-                break;
-            case (int)TrampolineColor.Blue:
-                x = 2.5f;
-                break;
-            case (int)TrampolineColor.Yellow:
-                x = -2.5f;
-                break;
-        }
-
-        // y軸（高さ）はランダム
-        y = UnityEngine.Random.Range(m_ItemYMinPosition, m_ItemYMaxPosition);
-
-        //Vector3型のPositionを返す
-        return new Vector3(x, y, z);
-    }
-
     void Start()
     {
         m_2SecWait = new WaitForSeconds(2f);
@@ -428,5 +400,31 @@ public class GameManager : MonoBehaviour
         m_TitleButton.SetActive(true);
     }
 
+    //ランダムな位置を生成する関数
+    private Vector3 GetRandomPosition(int trampolineColerNum)
+    {
+        float x = 0; //x軸は引数によって変える
+        float y = 0; //y軸はランダム
+        float z = 0; //z軸は0固定
 
+        //x軸だけランダムに生成する
+        switch (trampolineColerNum)
+        {
+            case (int)TrampolineColor.Red:
+                x = 0;
+                break;
+            case (int)TrampolineColor.Blue:
+                x = 2.5f;
+                break;
+            case (int)TrampolineColor.Yellow:
+                x = -2.5f;
+                break;
+        }
+
+        // y軸（高さ）はランダム
+        y = UnityEngine.Random.Range(m_ItemYMinPosition, m_ItemYMaxPosition);
+
+        //Vector3型のPositionを返す
+        return new Vector3(x, y, z);
+    }
 }
